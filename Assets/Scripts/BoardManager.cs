@@ -8,6 +8,7 @@ public class BoardManager : MonoBehaviour
         public bool Passable;
     }
 
+    private Grid m_Grid;
     private Tilemap m_Tilemap;
     private CellData[,] m_BoardData;
 
@@ -15,10 +16,11 @@ public class BoardManager : MonoBehaviour
     public int Height;
     public Tile[] GroundTiles;
     public Tile[] WallTiles;
+    public PlayerController Player;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Init()
     {
+        m_Grid = GetComponentInChildren<Grid>();
         m_Tilemap = GetComponentInChildren<Tilemap>();
 
         m_BoardData = new CellData[Width, Height];
@@ -28,6 +30,7 @@ public class BoardManager : MonoBehaviour
             for (int x = 0; x < Width; ++x)
             {
                 Tile tile;
+                m_BoardData[x, y] = new CellData();
 
                 if (x == 0 || y == 0 || x == Width - 1 || y == Height - 1)
                 {
@@ -45,9 +48,21 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public Vector3 CellToWorld(Vector2Int cellIndex)
     {
+        return m_Grid.GetCellCenterWorld((Vector3Int)cellIndex);
+    }
 
+    public CellData GetCellData(Vector2Int cellIndex)
+    {
+        if (cellIndex.x < 0
+            || cellIndex.x >= Width
+            || cellIndex.y < 0
+            || cellIndex.y >= Height)
+        {
+            return null;
+        }
+
+        return m_BoardData[cellIndex.x, cellIndex.y];
     }
 }
