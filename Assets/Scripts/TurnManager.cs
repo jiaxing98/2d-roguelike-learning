@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class TurnManager
 {
+    public event Action OnTick;
+
     private int m_TurnCount;
 
     public TurnManager()
@@ -12,6 +15,8 @@ public class TurnManager
     public void Tick()
     {
         m_TurnCount += 1;
+        OnTick?.Invoke();
+
         Debug.Log("Current turn count : " + m_TurnCount);
     }
 }
